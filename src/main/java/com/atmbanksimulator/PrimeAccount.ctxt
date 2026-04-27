@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=PrimeAccount
+comment1.params=accNumber\ password\ balance
+comment1.target=PrimeAccount(java.lang.String,\ java.lang.String,\ int)
+comment2.params=amount
+comment2.target=boolean\ withdraw(int)
+comment3.params=
+comment3.target=int\ getAvailableFunds()
+numComments=4

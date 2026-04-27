@@ -56,7 +56,7 @@ class View {
         root.getChildren().addAll(bankName, hint, startBtn); // adds all elements to screen layout
 
         Scene welcomeScene = new Scene(root, W, H);
-        welcomeScene.getStylesheets().add("atm.css");
+        welcomeScene.getStylesheets().add("src/main/resources/atm.css");
 
         window.setMinWidth(665); //setting the min width for the application
         window.setMinHeight(580); //setting the min height for the application
@@ -98,7 +98,7 @@ class View {
         root.getChildren().addAll(thankYou, reminder, homeBtn); // adding all elements to screen
 
         Scene goodbyeScene = new Scene(root, W, H);
-        goodbyeScene.getStylesheets().add("atm.css");
+        goodbyeScene.getStylesheets().add("src/main/resources/atm.css");
         window.setScene(goodbyeScene);
         window.setTitle("ATM Simulator");
     }
@@ -137,12 +137,14 @@ class View {
 
         // Define the button layout as a 2D array of text labels.
         // Empty strings ("") represent blank spaces in the grid.
+            
         String buttonTexts[][] = {
-                {"7", "8", "9", "", "FIN", "DEP"},
-                {"4", "5", "6", "", "CLR", "W/D"},
-                {"1", "2", "3", "", "BAL", "NEWACC"},
-                {"", "0", "", "", "BACK", "CHPW"},
-                {"", "", "", "", "ENTR", "TRNSF"}};
+                {"7", "8", "9", "", "DEP", "W/D"},
+                {"4", "5", "6", "", "NEWACC", "CHPW"},
+                {"1", "2", "3", "", "BAL", "TRNSF"},
+                {"", "0", "", "",   "", ""},
+                {"CLR", "", "ENTR", "", "BACK", "FIN"}
+            };
 
         // Build the button panel, loop through the array,
         // - For non-empty strings, create a Button
@@ -170,7 +172,7 @@ class View {
         Scene scene = new Scene(grid, W, H);
         window.setMinWidth(665);
         window.setMinHeight(580);
-        scene.getStylesheets().add("atm.css"); // tell to use our css file
+        scene.getStylesheets().add("src/main/resources/atm.css"); // tell to use our css file
         window.setScene(scene);
         window.setTitle("ATM Simulator"); //set window title
         window.show();

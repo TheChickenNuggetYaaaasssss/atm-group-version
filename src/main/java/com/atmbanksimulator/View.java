@@ -19,6 +19,8 @@ class View {
     int H = 550;         // Height of window pixels
     int W = 650;         // Width  of window pixels
 
+
+
     Controller controller; // Reference to the Controller (part of the MVC setup)
 
     // Components (controls and layout) of the user interface
@@ -40,62 +42,27 @@ class View {
         root.setAlignment(Pos.CENTER); // aligns items in screen layout to the centre
         root.setPadding(new Insets(40)); // adds padding around elements
 
-        this.laMsg = new Label("Welcome to the ATM Bank Simulator"); // text for the welcome screen
-        laMsg.setId("welcome_title");
+        Label bankName = new Label("Welcome to the ATM Bank Simulator"); // text for the welcome screen
+        bankName.setId("welcome_title");
 
-        this.taResult = new TextArea("Enter your Account Number"); // text for the welcome screen
-        taResult.setId("welcome_hint");
-        taResult.setEditable(false);
-        //taResult.setTextAlignment(TextAlignment.CENTER);
-        
-        this.tfInput = new TextField();     // text field for numbers
-        tfInput.setEditable(false);     // Read only (user can't type in)
-        
-        buttonPane = new TilePane(); //
-        buttonPane.setId("WelcomeButtons"); // assign an id to be used in css file
-        buttonPane.setMaxWidth(Region.USE_PREF_SIZE); //fixes scalign
+        Label hint = new Label("Press START to begin"); // text for the welcome screen
+        hint.setId("welcome_hint");
+        hint.setTextAlignment(TextAlignment.CENTER);
 
-        String buttonTexts[][] = {
-                {"7",    "8",  "9", "", "NewAcc"},
-                {"4",    "5",  "6", "", ""},
-                {"1",    "2",  "3", "", ""},
-                {"",  "0",  "", "", ""},
-                {"",  "",  "", "", ""},
-                {"Clear",  "",  "Enter", "", ""},
-            };
-            
-        // Build the button panel, loop through the array,
-        // - For non-empty strings, create a Button
-        // - For empty strings, add an empty Text element as a spacer
-        // Add all elements to the buttonPane (a tiled pane),
-        // then place the buttonPane into the main grid as the fourth row.
-        for ( String[] row: buttonTexts ) {
-            for (String text: row) {
-                if ( text.length() >= 1 ) {
-                    // non-empty string - make a button
-                    Button btn = new Button( text );
-                    btn.setOnAction( this::buttonClicked );
-                    // Register event handler: call buttonClicked() whenever this button is pressed
-                    buttonPane.getChildren().add( btn );    // add this button to tiled pane
-                } else {
-                    // empty string - make an empty Text element as a spacer
-                    buttonPane.getChildren().add( new Text() );
-                }
-            }
-        }
+        Button startBtn = new Button("START"); // button to take user to main application
+        startBtn.setId("welcome_btn");
+        startBtn.setOnAction(e -> view_start_atm(window));
 
-        root.getChildren().addAll(laMsg, tfInput, taResult, buttonPane); // adds all elements to screen layout
+        root.getChildren().addAll(bankName, hint, startBtn); // adds all elements to screen layout
 
         Scene welcomeScene = new Scene(root, W, H);
-        welcomeScene.getStylesheets().add("src/main/resources/atm.css");
+        welcomeScene.getStylesheets().add("atm.css");
 
         window.setMinWidth(665); //setting the min width for the application
         window.setMinHeight(580); //setting the min height for the application
         window.setTitle("ATM Simulator"); //setting the window title
         window.setScene(welcomeScene);
         window.show();
-        
-        controller.UIModel.initialise();  // initialise model state
 
     }
 
@@ -230,41 +197,5 @@ class View {
         laMsg.setText(msg);
         tfInput.setText(tfInputMsg);
         taResult.setText(taResultMsg);
-    }
-    
-    public void changeButtons(){
-        
-        buttonPane.getChildren().clear();
-        buttonPane.setId("Buttons");
-        buttonPane.setPrefColumns(6);
-        
-        String buttonTexts[][] = {
-                {"7", "8", "9", "", "FIN", "DEP"},
-                {"4", "5", "6", "", "", "W/D"},
-                {"1", "2", "3", "", "BAL", ""},
-                {"", "0", "", "", "BACK", "CHPW"},
-                {"", "", "", "", "", "TRNSF"},
-                {"Clear", "", "Enter", "", "", ""}
-            };
-
-        // Build the button panel, loop through the array,
-        // - For non-empty strings, create a Button
-        // - For empty strings, add an empty Text element as a spacer
-        // Add all elements to the buttonPane (a tiled pane),
-        // then place the buttonPane into the main grid as the fourth row.
-        for ( String[] row: buttonTexts ) {
-            for (String text: row) {
-                if ( text.length() >= 1 ) {
-                    // non-empty string - make a button
-                    Button btn = new Button( text );
-                    btn.setOnAction( this::buttonClicked );
-                              // Register event handler: call buttonClicked() whenever this button is pressed
-                    buttonPane.getChildren().add( btn );    // add this button to tiled pane
-                } else {
-                    // empty string - make an empty Text element as a spacer
-                    buttonPane.getChildren().add( new Text() );
-                }
-            }
-        }
     }
 }

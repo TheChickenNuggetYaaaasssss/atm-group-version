@@ -62,7 +62,7 @@ public class UIModel {
         setState(STATE_ACCOUNT_NO);
         numberPadInput = "";
         message = "Welcome to the ATM";
-        result = "Enter your Account Number";
+        result = "Enter your account number\nFollowed by \"ENTR\"";
         update();
     }
 
@@ -74,7 +74,7 @@ public class UIModel {
         setState(STATE_ACCOUNT_NO);
         numberPadInput = "";
         message = msg;
-        result = "Enter your Account Number";
+        result = "Enter your account number\nFollowed by \"ENTR\"";
     }
 
     // Change the ATM state and print a debug message whenever the state changes
@@ -138,7 +138,7 @@ public class UIModel {
                     numberPadInput = "";
                     setState(STATE_PASSWORD);
                     message = "Account Number Accepted";
-                    result = "Now enter your Password";
+                    result = "Now enter your password\nFollowed by \"ENTR\"";
                 }
                 break;
 
@@ -157,7 +157,6 @@ public class UIModel {
                         // Successful login: change state to STATE_LOGGED_IN and provide instructions
                         setState(STATE_LOGGED_IN);
                         message = "Logged In";
-                        view.changeButtons();
                         result = "Please select an option:\n\nFIN - Finish     | DEP - Deposit\nCLR - Clear      | W/D - Withdraw\nBAL - Balance    | NEWACC - New Account\nBACK - Back      | CHPW - Change Password\nENTR - Enter     | TRNSF - Transfer";
                     }
                     else {

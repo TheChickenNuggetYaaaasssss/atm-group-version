@@ -14,6 +14,4 @@ comment6.params=event
 comment6.target=void\ buttonClicked(javafx.event.ActionEvent)
 comment7.params=msg\ tfInputMsg\ taResultMsg
 comment7.target=void\ update(java.lang.String,\ java.lang.String,\ java.lang.String)
-comment8.params=
-comment8.target=void\ changeButtons()
-numComments=9
+numComments=8

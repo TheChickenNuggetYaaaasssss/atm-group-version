@@ -20,7 +20,7 @@ public class Controller {
             case "CLR":
                 UIModel.processClear();
                 break;
-            case "ENTR":
+            case "ENTR": case "Enter":
                 UIModel.processEnter();
                 break;
             case "W/D":
@@ -40,7 +40,7 @@ public class Controller {
             case "CHPW":
                 UIModel.processChangePassword();
                 break;
-            case "NEWACC":
+            case "NEWACC": case "NewAcc":
                 UIModel.processCreateAccount();
                 break;
             default:

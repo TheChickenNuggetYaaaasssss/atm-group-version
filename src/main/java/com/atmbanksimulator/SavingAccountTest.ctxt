@@ -1,7 +1,0 @@
-#BlueJ class context
-comment0.target=SavingAccountTest
-comment1.params=
-comment1.target=void\ setUp()
-comment2.params=
-comment2.target=void\ applyInterest_shouldApplyInterest()
-numComments=3

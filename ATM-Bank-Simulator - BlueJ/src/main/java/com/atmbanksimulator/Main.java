@@ -1,0 +1,59 @@
+package src.main.java.com.atmbanksimulator;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+import java.io.*;
+import java.util.Scanner;
+// 🧍Think of MVC like a human body:
+// - View is the face and senses: it shows things and receives input.
+// - Controller is the nerves: it carries signals to the brain and triggers actions.
+// - UIModel is the brain: it holds state and logic, and queries domain services.
+// - Bank / BankAccount are the real "money world" rules.
+// Together, they simulate how an ATM thinks, reacts, and handles money.
+
+public class Main extends Application {
+    public static void main( String args[] ) {launch(args);}
+
+
+    public void start(Stage window) throws IOException {
+        // Create a Bank object add two bank accounts for test
+        Bank bank = new Bank();
+        bank.addBankAccount("10001", "11111", 100);
+        bank.addBankAccount("10002", "22222", 50);
+        
+        //reads the files of existing bank accounts and transfers the strings into usable data
+        for (int i = 1; i < bank.numAccounts; i++) {
+            int countAcc = bank.fileName + 1;
+            File file = new File(countAcc +".txt");
+            
+            //checks if file exists (prevents a loop from creating all 11 accounts instantly)
+            if (file.exists()) {
+                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                    String firstLine = br.readLine();
+                    String secondLine = br.readLine();
+                    String thirdLine = br.readLine();
+                    int line3 = Integer.parseInt(thirdLine); //converts the third line into an int, so that withdrawing/depositing works
+                    bank.addBankAccount(firstLine, secondLine, line3); //creates the account
+                } catch (FileNotFoundException e) {
+                    System.out.println("An error occured.");
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("");
+            }
+        }
+        //UIModel-View-Controller structure setup
+        // Create the UIModel, View and Controller objects and link them together
+        UIModel model = new UIModel(bank);   // the UIModel needs the Bank object to 'talk to' the bank
+        View  view  = new View();
+        Controller controller  = new Controller(model);
+
+        // Link them together so they can talk to each other
+        view.controller = controller;
+        model.view = view;
+
+        // boots application into the Welcome Screen
+        view.welcome(window);
+    }
+}

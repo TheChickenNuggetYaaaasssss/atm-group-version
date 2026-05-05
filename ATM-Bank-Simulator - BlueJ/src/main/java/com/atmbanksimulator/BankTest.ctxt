@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=BankTest
+comment1.params=
+comment1.target=void\ setUp()
+comment2.params=
+comment2.target=void\ createAccount_shouldReturnTrue_whenBelowAccountLimit()
+comment3.params=
+comment3.target=void\ createAccount_shouldReturnFalse_whenOverAccountLimit()
+comment4.params=
+comment4.target=void\ createAccount_shouldReturnFalse_whenAccountNumberTaken()
+comment5.params=
+comment5.target=void\ login_shouldReturnTrue_whenCorrectDetails()
+comment6.params=
+comment6.target=void\ login_shouldReturnFalse_whenInorrectDetails()
+comment7.params=
+comment7.target=void\ withdraw_shouldPass_whenSufficientFunds()
+comment8.params=
+comment8.target=void\ withdraw_shouldFail_whenInsufficientFunds()
+numComments=9

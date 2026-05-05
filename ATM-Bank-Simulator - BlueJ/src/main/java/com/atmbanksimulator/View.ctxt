@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=View
+comment1.params=window
+comment1.target=void\ welcome(javafx.stage.Stage)
+comment2.params=window
+comment2.target=void\ view_start_atm(javafx.stage.Stage)
+comment3.params=
+comment3.target=void\ goodbye()
+comment4.params=window
+comment4.target=void\ goodbye(javafx.stage.Stage)
+comment5.params=window
+comment5.target=void\ start(javafx.stage.Stage)
+comment6.params=event
+comment6.target=void\ buttonClicked(javafx.event.ActionEvent)
+comment7.params=msg\ tfInputMsg\ taResultMsg
+comment7.target=void\ update(java.lang.String,\ java.lang.String,\ java.lang.String)
+numComments=8

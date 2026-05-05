@@ -1,5 +1,7 @@
 package src.main.java.com.atmbanksimulator;
 
+import java.io.*;
+import java.util.Scanner;
 // ===== 🧠 UIModel (Brain) =====
 
 // The UIModel represents all the actual content and functionality of the app
@@ -118,7 +120,7 @@ public class UIModel {
     // This is a more complex method: pressing Enter causes the ATM to change state,
     // progressing from STATE_ACCOUNT_NO → STATE_PASSWORD → STATE_LOGGED_IN,
     // and back to STATE_ACCOUNT_NO when logging out.
-    public void processEnter()
+    public void processEnter() throws IOException
     {
         // The action depends on the current ATM state
         switch ( state )
@@ -199,7 +201,7 @@ public class UIModel {
                 // User has typed their new password and pressed Ent
                 String newPw = numberPadInput;
                 numberPadInput = "";
-
+                
                 if (newPw.isEmpty()) {
                     message = "New password cannot be empty";
                     // stay in same state — let them try again
@@ -208,6 +210,33 @@ public class UIModel {
                     setState(STATE_LOGGED_IN);
                     message = "Password changed successfully";
                     result  = "Please select an option:\n\nFIN - Finish     | DEP - Deposit\nCLR - Clear      | W/D - Withdraw\nBAL - Balance    | NEWACC - New Account\nBACK - Back      | CHPW - Change Password\nENTR - Enter     | TRNSF - Transfer";
+                    
+                    for (int i = 1; i < bank.numAccounts+1; i++) {
+                        int fileName = i;
+                        File storeAcc = new File(fileName +".txt");
+            
+                        try (BufferedReader br = new BufferedReader(new FileReader(fileName +".txt"))) {
+                            String firstLine = br.readLine();
+                            if (firstLine.contains(accNumber)) {
+                                try {
+                                    FileWriter Writer = new FileWriter(storeAcc);
+                                    BufferedWriter bw = new BufferedWriter(Writer);
+                                    bw.write(accNumber +"\n" +newPw +"\n" +bank.getBalance()); //splits the three values into their own lines (makes it easier to use)
+                                    bw.close();
+                                    System.out.println("updated file");
+                                    update();
+                                }   catch (IOException e) {
+                                    System.out.println("An error has occured.");
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                System.out.println(firstLine +" vs " +accNumber +" does not match");
+                            }
+                        } catch (FileNotFoundException e) {
+                            System.out.println("An error occured.");
+                            e.printStackTrace();
+                        }
+                    }
                 } else {
                     // Old password was wrong — kick back to start
                     message = "Incorrect current password";
@@ -330,6 +359,33 @@ public class UIModel {
                         message = "£" + transferAmount + " transferred to " + trnsfAccNumber;
                         result  = "Please select an option:\n\nFIN - Finish     | DEP - Deposit\nCLR - Clear      | W/D - Withdraw\nBAL - Balance    | NEWACC - New Account\nBACK - Back      | CHPW - Change Password\nENTR - Enter     | TRNSF - Transfer";
                         setState(STATE_LOGGED_IN);
+                        
+                        for (int i = 1; i < bank.numAccounts+1; i++) {
+                            int fileName = i;
+                            File storeAcc = new File(fileName +".txt");
+                            
+                            try (BufferedReader br = new BufferedReader(new FileReader(fileName +".txt"))) {
+                                String firstLine = br.readLine();
+                                if (firstLine.contains(accNumber)) {
+                                    try {
+                                        FileWriter Writer = new FileWriter(storeAcc);
+                                        BufferedWriter bw = new BufferedWriter(Writer);
+                                        bw.write(accNumber +"\n" +accPasswd +"\n" +bank.getBalance()); //splits the three values into their own lines (makes it easier to use)
+                                        bw.close();
+                                        System.out.println("updated file");
+                                        update();
+                                    }   catch (IOException e) {
+                                        System.out.println("An error has occured.");
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    System.out.println(firstLine +" vs " +accNumber +" does not match");
+                                }
+                            } catch (FileNotFoundException e) {
+                                System.out.println("An error occured.");
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
                 break;
@@ -380,15 +436,17 @@ public class UIModel {
         update();
     }
 
+    public static File file = new File("recent.txt");
     // Handle the Withdraw button:
     // If the user is logged in, attempt to withdraw the amount entered;
     // otherwise, reset the ATM and display an error message.
     // Reads the amount from numberPadInput, validates it, and updates messages/results accordingly.
-    public void processWithdraw() {
+    public void processWithdraw() throws IOException {
     if (state.equals(STATE_LOGGED_IN)) {
         int amount = parseValidAmount(numberPadInput);
         numberPadInput = "";
-
+        
+        
         if (amount <= 0) {
             message = "Invalid Amount";
             result  = "Please select an option:\n\nFIN - Finish     | DEP - Deposit\nCLR - Clear      | W/D - Withdraw\nBAL - Balance    | NEWACC - New Account\nBACK - Back      | CHPW - Change Password\nENTR - Enter     | TRNSF - Transfer";
@@ -401,8 +459,48 @@ public class UIModel {
             } else {
                 bank.withdraw(amount);
                 message = "Withdraw Successful";
-                result  = "Withdrawn: £" + amount;
+                result  = "Withdrawn: £" + amount +"\n New balance: £" +bank.getBalance();
+                try {
+
+                    FileWriter Writer = new FileWriter(file, true);
+                    BufferedWriter bw = new BufferedWriter(Writer);
+                    bw.write("Withdrawn: £" +amount);
+                    bw.newLine();
+                    bw.close();
+                    
+                }
+                catch (IOException e) {
+                    System.out.println("An error has occured.");
+                    e.printStackTrace();
+                }
                 depth++;
+            }
+        }
+        
+        for (int i = 1; i < bank.numAccounts+1; i++) {
+            int fileName = i;
+            File storeAcc = new File(fileName +".txt");
+            
+            try (BufferedReader br = new BufferedReader(new FileReader(fileName +".txt"))) {
+                String firstLine = br.readLine();
+                if (firstLine.contains(accNumber)) {
+                    try {
+                        FileWriter Writer = new FileWriter(storeAcc);
+                        BufferedWriter bw = new BufferedWriter(Writer);
+                        bw.write(accNumber +"\n" +accPasswd +"\n" +bank.getBalance()); //splits the three values into their own lines (makes it easier to use)
+                        bw.close();
+                        System.out.println("updated file");
+                        update();
+                    }   catch (IOException e) {
+                        System.out.println("An error has occured.");
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println(firstLine +" vs " +accNumber +" does not match");
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("An error occured.");
+                e.printStackTrace();
             }
         }
     } else {
@@ -415,11 +513,11 @@ public class UIModel {
     // - If the user is logged in, deposit the amount entered into the bank
     // - Reads the amount from numberPadInput, validates it, and updates messages/results accordingly
     // - Otherwise, reset the ATM and display an error message
-    public void processDeposit() {
+    public void processDeposit() throws IOException{
     if (state.equals(STATE_LOGGED_IN)) {
         int amount = parseValidAmount(numberPadInput);
         numberPadInput = "";
-
+        
         if (amount <= 0) {
             message = "Invalid Amount";
             result  = "Please select an option:\n\nFIN - Finish     | DEP - Deposit\nCLR - Clear      | W/D - Withdraw\nBAL - Balance    | NEWACC - New Account\nBACK - Back      | CHPW - Change Password\nENTR - Enter     | TRNSF - Transfer";
@@ -432,7 +530,46 @@ public class UIModel {
             } else {
                 bank.deposit(amount);
                 message = "Deposit Successful";
-                result  = "Deposited: £" + amount;
+                result  = "Deposited: £" + amount +"\n New balance: £" +bank.getBalance();
+                try {
+
+                    FileWriter Writer = new FileWriter(file, true);
+                    BufferedWriter bw = new BufferedWriter(Writer);
+                    bw.write("Deposited: £" +amount);
+                    bw.newLine();
+                    bw.close();
+                    
+                }
+                catch (IOException e) {
+                    System.out.println("An error has occured.");
+                    e.printStackTrace();
+                }
+                        for (int i = 1; i < bank.numAccounts+1; i++) {
+                    int fileName = i;
+                    File storeAcc = new File(fileName +".txt");
+                    
+                    try (BufferedReader br = new BufferedReader(new FileReader(fileName +".txt"))) {
+                        String firstLine = br.readLine();
+                        if (firstLine.contains(accNumber)) {
+                            try {
+                                FileWriter Writer = new FileWriter(storeAcc);
+                                BufferedWriter bw = new BufferedWriter(Writer);
+                                bw.write(accNumber +"\n" +accPasswd +"\n" +bank.getBalance()); //splits the three values into their own lines (makes it easier to use)
+                                bw.close();
+                                System.out.println("updated file"); //saves new balance for next program run
+                                update();
+                            }   catch (IOException e) {
+                                System.out.println("An error has occured.");
+                                e.printStackTrace();
+                            }
+                        } else {
+                            System.out.println(firstLine +" vs " +accNumber +" does not match");
+                        }
+                    } catch (FileNotFoundException e) {
+                        System.out.println("An error occured.");
+                        e.printStackTrace();
+                    }
+                }
                 depth++;
             }
         }
@@ -467,6 +604,7 @@ public class UIModel {
         message = "Create New Account";
         result  = "Enter a new account number\nFollowed by \"ENTR\"";
         update();
+        file.delete();
     }
     
     // Handle the Finish button:
@@ -515,7 +653,27 @@ public class UIModel {
             update();
         }
     }
-
+    
+    public void processRecent(){
+        if (state.equals(STATE_LOGGED_IN)) {
+            message = "Current Balance: £" +bank.getBalance();
+            String reverse = ""; // used to reverse the order of output
+            try (Scanner Reader = new Scanner(file)) {
+                while (Reader.hasNextLine()) {
+                    String data = Reader.nextLine();
+                    reverse = data +"\n" +reverse;
+                }
+                result = "Transactions made this log-in \n " +reverse;
+            } catch (FileNotFoundException e) {
+                System.out.println("An error occured.");
+                e.printStackTrace();
+            }
+        }
+        else {
+            System.out.println("Not logged in");
+        }
+        update();
+    }
     // Notify the View of changes by calling its update method
     private void update() {
         view.update(message,numberPadInput, result);

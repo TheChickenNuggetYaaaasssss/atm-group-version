@@ -1,4 +1,4 @@
-// File: src/main/java/com/atmbanksimulator/PrimeAccount.java
+
 
 package src.main.java.com.atmbanksimulator;
 

@@ -1,4 +1,3 @@
-// File: src/main/java/com/atmbanksimulator/SavingAccount.java
 
 package src.main.java.com.atmbanksimulator;
 

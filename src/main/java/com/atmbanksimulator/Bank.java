@@ -1,5 +1,6 @@
 package src.main.java.com.atmbanksimulator;
 
+import java.io.*;
 // ===== 📚🌐Bank (Domain / Service / Business Logic) =====
 
 // Bank class: a simple implementation of a bank, containing a list of bank accounts
@@ -16,13 +17,28 @@ public class Bank {
 
     // Instance variables storing bank information
     private int maxAccounts = 10;                       // Maximum number of accounts the bank can hold
-    private int numAccounts = 0;                        // Current number of accounts in the bank
-    private BankAccount[] accounts = new BankAccount[maxAccounts];  // Array to hold BankAccount objects
+    public int numAccounts = 0;                        // Current number of accounts in the bank
+    public BankAccount[] accounts = new BankAccount[maxAccounts];  // Array to hold BankAccount objects
     private BankAccount loggedInAccount = null;         // Currently logged-in account ('null' if no one is logged in)
-
+    public int fileName = numAccounts;
     // a method to create new BankAccount - this is known as a 'factory method' and is a more
     // flexible way to do it than just using the 'new' keyword directly.
     public BankAccount makeBankAccount(String accNumber, String accPasswd, int balance) {
+        
+        //creates the first 2 files for the pre-existing bank accounts (found in main)
+        //allows future bank accounts to save between every program run
+        fileName = fileName + 1;
+        File storeAcc = new File(fileName +".txt");
+        try {
+            FileWriter Writer = new FileWriter(storeAcc);
+            BufferedWriter bw = new BufferedWriter(Writer);
+            bw.write(accNumber +"\n" +accPasswd +"\n" +balance); //splits the three values into their own lines (makes it easier to use)
+            bw.close();
+        }
+        catch (IOException e) {
+            System.out.println("An error has occured.");
+            e.printStackTrace();
+        }
         return new BankAccount(accNumber, accPasswd, balance);
     }
 
@@ -61,10 +77,10 @@ public class Bank {
         loggedInAccount.setPassword(newPassword);   // save the new password
         return true;
     }
-
+    
     // Create a brand new account
     // Returns true if successful, false if account number already exists
-    public boolean createAccount(String accNumber, String password, int balance, String accountType) {
+    public boolean createAccount(String accNumber, String password, int balance, String accountType) throws IOException {
         if (findAccount(accNumber) != null) return false;
         if (accNumber.isEmpty() || password.isEmpty() || balance < 0) return false;
 
@@ -76,7 +92,20 @@ public class Bank {
             case "Saving":   newAccount = new SavingAccount(accNumber, password, balance);  break;
             default:         newAccount = new BankAccount(accNumber, password, balance);    break;
         }
-
+        
+        //creates a new txt file for every new bank account created
+        fileName = fileName + 1;
+        File storeAcc = new File(fileName +".txt");
+        try {
+            FileWriter Writer = new FileWriter(storeAcc);
+            BufferedWriter bw = new BufferedWriter(Writer);
+            bw.write(accNumber +"\n" +password +"\n" +balance);
+            bw.close();
+        }
+        catch (IOException e) {
+            System.out.println("An error has occured.");
+            e.printStackTrace();
+        }
         return addBankAccount(newAccount);
     }
 
@@ -163,7 +192,7 @@ public class Bank {
         return null;   // When account is not found
     }
 
-    public boolean transfer(String targetAccNumber, int amount) {
+    public boolean transfer(String targetAccNumber, int amount) throws IOException{
         BankAccount target = findAccount(targetAccNumber);
         if (target == null) return false;
 
@@ -174,6 +203,30 @@ public class Bank {
         if (withdrawn) {
             // Only deposit into target if the withdrawal actually succeeded
             target.deposit(amount);
+            for (int i = 1; i < numAccounts+1; i++) {
+                int fileName = i;
+                File storeAcc = new File(fileName +".txt");
+                
+                try (BufferedReader br = new BufferedReader(new FileReader(fileName +".txt"))) {
+                    String firstLine = br.readLine();
+                    if (firstLine.contains(targetAccNumber)) {
+                        try {
+                            FileWriter Writer = new FileWriter(storeAcc);
+                            BufferedWriter bw = new BufferedWriter(Writer);
+                            bw.write(targetAccNumber +"\n" +target.getaccPasswd() +"\n" +target.getBalance()); //splits the three values into their own lines (makes it easier to use)
+                            bw.close();
+                        }   catch (IOException e) {
+                            System.out.println("An error has occured.");
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println(firstLine +" vs " +targetAccNumber +" does not match");
+                    }
+                } catch (FileNotFoundException e) {
+                    System.out.println("An error occured.");
+                    e.printStackTrace();
+                }
+            }
             return true;
         }
         return false;  // withdraw failed — nothing happened to either account

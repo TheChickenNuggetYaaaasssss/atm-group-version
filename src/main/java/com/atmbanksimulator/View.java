@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import java.io.File;
 
 // ===== 🙂 View (Eyes / Ears / Nose / Mouth / Face) =====
 
@@ -139,11 +140,11 @@ class View {
         // Empty strings ("") represent blank spaces in the grid.
             
         String buttonTexts[][] = {
-                {"7", "8", "9", "", "DEP", "W/D"},
-                {"4", "5", "6", "", "NEWACC", "CHPW"},
-                {"1", "2", "3", "", "BAL", "TRNSF"},
-                {"", "0", "", "",   "", ""},
-                {"CLR", "", "ENTR", "", "BACK", "FIN"}
+                {"7",   "8", "9",    "",  "DEP",    "W/D"},
+                {"4",   "5", "6",    "",  "NEWACC", "CHPW"},
+                {"1",   "2", "3",    "",  "BAL",    "TRNSF"},
+                {"",    "0", "",     "",  "",       "RCNT"},
+                {"CLR", "",  "ENTR", "",  "BACK",   "FIN"}
             };
 
         // Build the button panel, loop through the array,
@@ -176,6 +177,8 @@ class View {
         window.setScene(scene);
         window.setTitle("ATM Simulator"); //set window title
         window.show();
+        File file = new File("recent.txt");
+        file.delete();
     }
 
     // This is how the View talks to the Controller

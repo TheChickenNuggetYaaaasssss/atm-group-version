@@ -1,9 +1,0 @@
-#BlueJ class context
-comment0.target=StudentAccountTest
-comment1.params=
-comment1.target=void\ setUp()
-comment2.params=
-comment2.target=void\ withdraw_shouldFail_whenExceedsDailyLimit()
-comment3.params=
-comment3.target=void\ withdraw_shouldPass_whenWithinDailyLimit()
-numComments=4

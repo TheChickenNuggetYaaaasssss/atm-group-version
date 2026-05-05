@@ -194,7 +194,7 @@ public class Bank {
 
     public boolean transfer(String targetAccNumber, int amount) throws IOException{
         BankAccount target = findAccount(targetAccNumber);
-        if (target == null) return false;
+        if (target == null and !loggedIn()) return false;
 
         // Withdraw from logged-in account first using its own rules
         // (StudentAccount will check daily cap, PrimeAccount will check overdraft, etc.)

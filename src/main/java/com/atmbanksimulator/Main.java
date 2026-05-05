@@ -41,7 +41,7 @@ public class Main extends Application {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("doesnt exist yo");
+                System.out.println("doesnt exist");
             }
         }
         //UIModel-View-Controller structure setup
